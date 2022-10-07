@@ -1,53 +1,57 @@
-import { Button,Table} from 'antd'
-import React from 'react'
-import 'antd/dist/antd.min.css';
-import style from './User.module.css';
-const User = () => {
-    const dataSource = [
-        {
-          key: '1',
-          name: 'Mike',
-          email: 'tes@tes.com',
-          mobile: '1234567899',
-        },
-      ];
-      const columns = [
-        {
-          title: 'Name',
-          dataIndex: 'name',
-          key: 'name',
-        },
-        {
-          title: 'Email',
-          dataIndex: 'email',
-          key: 'email',
-        },
-        {
-          title: 'Mobile',
-          dataIndex: 'mobile',
-          key: 'mobile',
-        },
-          {
-            key: "5",
-            title: "Actions",
-            render: (record) => {
-              return (
-                <>
-                <div className={style.Btn__cls}>
-                  <Button type="primary"> edit</Button>
-                  <Button type="primary">delete</Button>
-                  </div>
-                </>
-              );
-            },
-          },
-      ];
-  return (
-    <div >
-        <Button type="primary">Add New User</Button>
-        <Table dataSource={dataSource} columns={columns} />;
-    </div>
-  )
+import React, {useState} from 'react'
+import { Button, Modal, Form } from 'antd';
+import DisplayUsers from './DisplayUsers';
+import UserForm from './UserForm';
+import {createUser, updateUser, clearEditUser} from '../redux/actions'
+import { useDispatch, useSelector } from 'react-redux';
+
+function User() {
+    const dispatch = useDispatch()
+    const [form] = Form.useForm();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const editUser = useSelector(state => state.userReducer?.editUser)
+
+    const showModal = () => {
+        setIsModalOpen(true);
+    };
+    
+    const handleSubmit = (user) => {
+        setIsModalOpen(false);
+        if (Object.keys(editUser).length !== 0) {
+            dispatch(updateUser(user))
+        } else {
+            dispatch(createUser(user))
+        }
+    };
+    
+    const handleCancel = () => {
+        setIsModalOpen(false);
+        dispatch(clearEditUser());
+        form.setFieldsValue({
+            name: '',
+            email: '',
+            mobile: '',
+        })
+    };
+
+    return (
+        <div>
+            <Button type="primary" onClick={showModal}>
+                Add New User
+            </Button>
+            <DisplayUsers
+                onShowModal={showModal}
+            />
+
+            <Modal title="Create User" open={isModalOpen} footer={null} onCancel={handleCancel}>
+                <UserForm
+                    onCancel={handleCancel}
+                    onSubmit={handleSubmit}
+                    form={form}
+                />
+            </Modal>
+        </div>
+    )
 }
 
 export default User

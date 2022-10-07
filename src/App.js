@@ -1,29 +1,23 @@
-import './App.css';
-import styles from './App.module.css';
-import 'antd/dist/antd.min.css';
 import { Tabs } from 'antd';
 import User from './components/User';
-import DeleteUser from './components/DeleteUser';
-  
-const { TabPane } = Tabs;
+import DeletedUsers from './components/DeletedUsers';
+import 'antd/dist/antd.min.css';
+import './App.css';
+
 function App() {
+  
   return (
-    <>
-    
-    <h1 className={styles.main__div}>React Task</h1>
-    <div style={{
-      display: 'block', width: 700, padding: 30
-    }}>
-      <Tabs type="card">
-        <TabPane tab="User" key="1">
-          <User/>
-        </TabPane>
-        <TabPane tab="Delete User" key="2">
-          <DeleteUser/>
-        </TabPane>
-      </Tabs>
+    <div>
+     <h3 className="App">React Task</h3>
+     <Tabs type="card" defaultActiveKey="1" style={{width: '50vw', marginLeft: '50px'}}>
+      <Tabs.TabPane tab="User" key="1">
+        <User />
+      </Tabs.TabPane>
+      <Tabs.TabPane tab="Deleted User" key="2">
+        <DeletedUsers />
+      </Tabs.TabPane>
+    </Tabs>
     </div>
-    </>
   );
 }
 
